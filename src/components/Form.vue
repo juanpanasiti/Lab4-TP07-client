@@ -4,7 +4,11 @@
       <b-row>
         <b-col cols="6">
           <b-form-group id="input-group-1" label="Instrumento:" label-for="input-instrumento">
-            <b-form-input id="input-instrumento" v-model="form.instrumento" type="text"></b-form-input>
+            <b-form-input
+              id="input-instrumento"
+              v-model="form.instrumento"
+              type="text"
+            ></b-form-input>
           </b-form-group>
         </b-col>
 
@@ -71,10 +75,11 @@
 import axios from "axios";
 
 export default {
+  props: ["productParam"],
   data() {
     return {
       form: {
-        instrumento: "",
+        instrumento:"",
         marca: "",
         modelo: "",
         precio: "",
@@ -83,7 +88,10 @@ export default {
         descripcion: ""
       },
       productImage: null
-    };
+    }; //return
+  },
+  mounted() {
+    this.fillForm()
   },
   methods: {
     onFileSelected(event) {
@@ -102,7 +110,11 @@ export default {
       axios.post("http://localhost:3002/products/", fd).then(res => {
         console.log(res);
       });
+    }, //onSubmit()
+    async fillForm(){
+      await console.log("desde el form");
+      await console.log(this.$props.instrumento)
     }
-  }
+  } //methods:
 };
 </script>

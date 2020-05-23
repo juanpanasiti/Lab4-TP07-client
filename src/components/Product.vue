@@ -4,9 +4,14 @@
       <b-row>
         <b-col class="pb-1">
           <b-button size="sm" variant="danger" v-on:click="deleteProduct(productParam._id)">Borrar</b-button>
-          <br>
-          <br>
-          <b-button size="sm" variant="warning">Editar</b-button>
+          <br />
+          <br />
+          <b-button
+            size="sm"
+            variant="warning"
+            :href="`/edit/${productParam._id}`"
+            :productParam="productParam"
+          >Editar</b-button>
         </b-col>
 
         <b-col class="pb-2"></b-col>
