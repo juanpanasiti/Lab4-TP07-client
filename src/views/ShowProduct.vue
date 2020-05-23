@@ -1,11 +1,11 @@
 <template>
   <div>
-    <b-container fluid>
+    <b-container fluid >
       <b-row>
           <br>
         <b-col cols="7" style="border-right: 1px solid #cecece">
           <div>
-            <b-img :src="'/img/' + product.imagen" fluid 
+            <b-img :src="'http://localhost:3002/' + product.imagenPath" fluid 
                     alt="Fluid image"
                     style="height: 300px"
                     center/>
@@ -17,11 +17,11 @@
           </p>
         </b-col>
 
-        <b-col cols="5" style="padding-top: 20px">
+        <b-col cols="5" >
           <p class="text-muted">{{product.cantidadVendida}} vendidos</p>
           <h3>{{product.instrumento}}</h3>
           <br />
-          <h1>${{product.precio}}</h1>
+          <h1>${{product.precio.$numberDecimal}}</h1>
           <br>
           <p>
               Marca: {{product.marca}}
@@ -30,13 +30,13 @@
           </p>
           <br>
           Costo Envío:
-          <p v-if="product.costoEnvio === 'G'" style="color: green">
+          <p v-if="product.costoEnvio.$numberDecimal === '0'" style="color: green">
             <b-img src="/img/camion.png" />Envío gratis
           </p>
           <p
             v-else
             style="color: orange"
-          >Interio de Argentina: ${{product.costoEnvio}}</p>
+          >Interio de Argentina: ${{product.costoEnvio.$numberDecimal}}</p>
           <br>
           <b-button variant="outline-primary">Agregar al carrito</b-button>
         </b-col>
@@ -61,13 +61,9 @@ export default {
       console.log("iniciando");
 
       const idParam = this.$route.params.id;
-      const res = await fetch("/data/instrumentos.json");
-      const resJson = await res.json();
-      console.log(resJson);
-
-      this.product = await resJson.instrumentos.find(
-        product => product.id === idParam
-      );
+      const res = await fetch("http://localhost:3002/products/" + idParam);
+      this.product = await res.json();
+      
       console.log(this.product);
     }
   }

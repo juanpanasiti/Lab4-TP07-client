@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    
+  <div class="">
+    <b-button variant="success" href="/new/">Nuevo Producto</b-button>
     <div
       v-for="instrumento in instrumentosData"
       :key="instrumento.id"
@@ -32,10 +32,10 @@ export default {
   },
   methods:{
     async getInstrumentos(){
-      const res = await fetch("/data/instrumentos.json")
+      const res = await fetch("http://localhost:3002/products")
       const resJson = await res.json()
       console.log(resJson)
-      this.instrumentosData = resJson.instrumentos
+      this.instrumentosData = resJson
     }
   }
 }
