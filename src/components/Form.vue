@@ -4,11 +4,7 @@
       <b-row>
         <b-col cols="6">
           <b-form-group id="input-group-1" label="Instrumento:" label-for="input-instrumento">
-            <b-form-input
-              id="input-instrumento"
-              v-model="form.instrumento"
-              type="text"
-            ></b-form-input>
+            <b-form-input id="input-instrumento" v-model="form.instrumento" type="text"></b-form-input>
           </b-form-group>
         </b-col>
 
@@ -73,13 +69,14 @@
 
 <script>
 import axios from "axios";
+//import VueRouter from 'vue-router'
 
 export default {
   props: ["productParam"],
   data() {
     return {
       form: {
-        instrumento:"",
+        instrumento: "",
         marca: "",
         modelo: "",
         precio: "",
@@ -87,33 +84,77 @@ export default {
         cantidadVendida: "",
         descripcion: ""
       },
-      productImage: null
+      productImage: null,
+      product: []
     }; //return
   },
-  mounted() {
-    this.fillForm()
+  async mounted() {
+    if (this.$route.params.id) {
+      await this.getProductById();
+      await this.fillForm();
+    }
   },
   methods: {
     onFileSelected(event) {
       this.productImage = event.target.files[0];
     },
-    onSubmit() {
-      const fd = new FormData();
-      fd.append("instrumento", this.form.instrumento);
-      fd.append("marca", this.form.marca);
-      fd.append("modelo", this.form.modelo);
-      fd.append("precio", this.form.precio);
-      fd.append("costoEnvio", this.form.costoEnvio);
-      fd.append("cantidadVendida", this.form.cantidadVendida);
-      fd.append("descripcion", this.form.descripcion);
-      fd.append("productImage", this.productImage, this.productImage.name);
-      axios.post("http://localhost:3002/products/", fd).then(res => {
-        console.log(res);
-      });
+    async onSubmit() {
+      try {
+        const fd = new FormData();
+        fd.append("_id", this.$route.params.id);
+        fd.append("instrumento", this.form.instrumento);
+        fd.append("marca", this.form.marca);
+        fd.append("modelo", this.form.modelo);
+        fd.append("precio", this.form.precio);
+        fd.append("costoEnvio", this.form.costoEnvio);
+        fd.append("cantidadVendida", this.form.cantidadVendida);
+        fd.append("descripcion", this.form.descripcion);
+        if (this.productImage) {
+          fd.append("productImage", this.productImage, this.productImage.name);
+        }
+
+        if (this.$route.params.id) {
+          console.log("Enviando para actualizar");
+
+          await axios
+            .put("http://localhost:3002/products/" + this.$route.params.id, fd)
+            .then(() => {
+              console.log("Actualizado OK");
+              window.location.replace("/products");
+            })
+            .catch(err => {
+              console.log("Error: " + err.message);
+            });
+        } else {
+          await axios
+            .post("http://localhost:3002/products/", fd)
+            .then(() => {
+              console.log("Actualizado OK");
+              window.location.replace("/products");
+            })
+            .catch(err => {
+              console.log("Error: " + err.message);
+            });
+        }
+      } catch (err) {
+        console.log("Error en onSubmit: " + err.message);
+      }
     }, //onSubmit()
-    async fillForm(){
-      await console.log("desde el form");
-      await console.log(this.$props.instrumento)
+    fillForm() {
+      console.log("Llenar form");
+
+      (this.form.instrumento = this.product.instrumento),
+        (this.form.marca = this.product.marca),
+        (this.form.modelo = this.product.modelo),
+        (this.form.precio = this.product.precio),
+        (this.form.costoEnvio = this.product.costoEnvio),
+        (this.form.cantidadVendida = this.product.cantidadVendida),
+        (this.form.descripcion = this.product.descripcion);
+    },
+    async getProductById() {
+      const idParam = this.$route.params.id;
+      const res = await fetch("http://localhost:3002/products/" + idParam);
+      this.product = await res.json();
     }
   } //methods:
 };

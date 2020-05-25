@@ -28,15 +28,15 @@
         <b-col cols="8" style="text-align:left">
           <h3>{{productParam.instrumento || ''}}</h3>
           <br />
-          <h2>${{productParam.precio.$numberDecimal || ''}}</h2>
+          <h2>${{productParam.precio || ''}}</h2>
 
-          <p v-if="(productParam.costoEnvio.$numberDecimal || '') === '0'" style="color: green">
+          <p v-if="(productParam.costoEnvio) === 0" style="color: green">
             <b-img src="/img/camion.png" />Envío gratis a todo el país
           </p>
           <p
             v-else
             style="color: orange"
-          >Costo de Envío Interio de Argentina: ${{productParam.costoEnvio.$numberDecimal || ''}}</p>
+          >Costo de Envío Interio de Argentina: ${{productParam.costoEnvio || ''}}</p>
 
           <p>{{productParam.cantidadVendida || ''}} vendidos</p>
         </b-col>
@@ -56,7 +56,9 @@ export default {
       });
       const resJson = await res.json();
       console.log(resJson);
-      this.$router.push("/products");
+      console.log("Redirigiendo a /products");
+      
+      window.location.replace("/products");
     } //deleteProduct()
   } //methods:
 };

@@ -21,7 +21,7 @@
           <p class="text-muted">{{product.cantidadVendida}} vendidos</p>
           <h3>{{product.instrumento}}</h3>
           <br />
-          <h1>${{product.precio.$numberDecimal}}</h1>
+          <h1>${{product.precio}}</h1>
           <br>
           <p>
               Marca: {{product.marca}}
@@ -30,13 +30,13 @@
           </p>
           <br>
           Costo Envío:
-          <p v-if="product.costoEnvio.$numberDecimal === '0'" style="color: green">
+          <p v-if="product.costoEnvio === '0'" style="color: green">
             <b-img src="/img/camion.png" />Envío gratis
           </p>
           <p
             v-else
             style="color: orange"
-          >Interio de Argentina: ${{product.costoEnvio.$numberDecimal}}</p>
+          >Interio de Argentina: ${{product.costoEnvio}}</p>
           <br>
           <b-button variant="outline-primary">Agregar al carrito</b-button>
         </b-col>

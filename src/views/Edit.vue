@@ -20,14 +20,10 @@ export default {
     }
   },
   methods: {
-    async getProductById() {
-
+    async getProductById() {  
       const idParam = this.$route.params.id;
       const res = await fetch("http://localhost:3002/products/" + idParam);
-      this.product = await res.json();
-      console.log("desde edit");
-      
-      console.log(this.product);
+      this.product = await res.json()
     }
   }
 };
